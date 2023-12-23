@@ -3,12 +3,13 @@ import { ITodoDTO } from '../dto/dto'
 import { useEffect, useState } from 'react'
 
 const useTodoGet = () => {
-  const [userData, setUserData] = useState<ITodoDTO[] | null>(null)
+  const [todoData, setTodoData] = useState<ITodoDTO[] | null>(null)
 
   const fetchData = async () => {
     try {
       const res = await axios.get<ITodoDTO[]>(`http://localhost:8080/get`)
-      setUserData(res.data)
+      setTodoData(res.data)
+      return res.data
     } catch (err) {
       console.error(err)
     }
@@ -18,7 +19,7 @@ const useTodoGet = () => {
     fetchData()
   }, [])
 
-  return { userData, fetchData }
+  return { todoData, fetchData }
 }
 
 export default useTodoGet

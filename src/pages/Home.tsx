@@ -4,12 +4,17 @@ import { useState } from 'react'
 import type { DatePickerProps } from 'antd'
 import type { Dayjs } from 'dayjs'
 import useTodoCreate from '../hooks/useTodoCreate'
+import useTodoGet from '../hooks/useTodoGet'
+import TodoCard from '../components/todoCard'
+import { ITodoDTO } from '../dto/dto'
 
 const Home = () => {
   const [newTodo, setTodo] = useState<string>('')
   const [newDate, setDate] = useState<string>('')
   const [newTime, setTime] = useState<string>('')
   const { Submit } = useTodoCreate()
+  const { todoData, fetchData } = useTodoGet()
+  const [newTodoList, setTodoList] = useState<ITodoDTO[] | null>(todoData)
 
   const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString)
@@ -21,13 +26,28 @@ const Home = () => {
     setTime(timeString)
   }
 
-  const SubmitTodo = () => {
+  const SubmitTodo = async () => {
     if (newDate) {
-      const combinedDateTime = new Date(`${newDate}T${newTime || '00:00:00'}Z`)
-      console.log(combinedDateTime)
-      Submit({ todo_list: newTodo, date: combinedDateTime })
+      try {
+        const combinedDateTime = new Date(`${newDate}T${newTime || '00:00:00'}Z`)
+        await Submit({ todo_list: newTodo, date: combinedDateTime })
+        const newData = await fetchData()
+        newData && newData ? setTodoList(newData) : null
+      } catch (error) {
+        console.error('Submit data error', error)
+      }
     } else {
       console.error('Please select date.')
+    }
+  }
+
+  const onDelete = async () => {
+    try {
+      await fetchData()
+      const newData = await fetchData()
+      newData && newData ? setTodoList(newData) : null
+    } catch (error) {
+      console.error('Error delete data', error)
     }
   }
 
@@ -48,6 +68,24 @@ const Home = () => {
             Submit
           </Button>
         </Space.Compact>
+      </div>
+      <div className={classes.card}>
+        {newTodoList !== null
+          ? newTodoList.map((todo) => {
+              return (
+                <div key={todo.id}>
+                  <TodoCard todoPost={todo} onTodoDeleted={onDelete} />
+                </div>
+              )
+            })
+          : todoData &&
+            todoData.map((todo) => {
+              return (
+                <div key={todo.id}>
+                  <TodoCard todoPost={todo} onTodoDeleted={onDelete} />
+                </div>
+              )
+            })}
       </div>
     </div>
   )
