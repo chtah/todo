@@ -18,7 +18,7 @@ interface ITodoProps {
 }
 
 const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited, onTodoCheck }: ITodoProps) => {
-  const showDate = dayjs(todoPost.date).utc().format('YYYY-MM-DD')
+  const showDate = dayjs(todoPost.date).utc().format('DD-MM-YYYY')
   const showTime = dayjs(todoPost.date).utc().format('HH:mm')
   const { SubmitDelete } = useTodoDelete()
   const { SubmitEdit } = useTodoEdit()
@@ -79,8 +79,8 @@ const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited, onTodoCheck }: ITodoP
         <div className={classes.textContainer}>
           <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{todoPost.todo_list}</p>
           <div className={classes.dateAndTimeContainer}>
-            <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{showDate}</p>
-            <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{showTime}</p>
+            <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{`Date ${showDate}`}</p>
+            <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{`Time ${showTime}`}</p>
           </div>
         </div>
       </div>

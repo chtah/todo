@@ -67,3 +67,25 @@
 .inputTime {
   width: 195px;
 }
+
+@media only screen and (max-width: 600px) {
+  .card {
+    width: 85vw;
+  }
+
+  .inputTodo {
+    width: 85vw;
+  }
+
+  .dateAndTime {
+    gap: 1vw;
+  }
+
+  .inputDate {
+    width: 42vw;
+  }
+
+  .inputTime {
+    width: 42vw;
+  }
+}
