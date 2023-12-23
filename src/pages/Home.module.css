@@ -29,3 +29,13 @@
   align-items: center;
   gap: 20px;
 }
+
+.horizontalLine {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 600px;
+}
+
+.titleHistory {
+  color: #5d5d5d;
+  text-align: center;
+}

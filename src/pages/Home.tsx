@@ -77,6 +77,14 @@ const Home = () => {
     }
   }
 
+  const completedTodos = (
+    newTodoList ? newTodoList.filter((todo) => todo.isDone) : todoData ? todoData.filter((todo) => todo.isDone) : []
+  ).sort((todo1, todo2) => todo1.id - todo2.id)
+
+  const pendingTodos = (
+    newTodoList ? newTodoList.filter((todo) => !todo.isDone) : todoData ? todoData.filter((todo) => !todo.isDone) : []
+  ).sort((todo1, todo2) => todo1.id - todo2.id)
+
   return (
     <div>
       <h1 className={classes.title}>TODO LIST</h1>
@@ -95,45 +103,29 @@ const Home = () => {
           </Button>
         </Space.Compact>
       </div>
+
       <div className={classes.cardContainer}>
-        {newTodoList !== null
-          ? newTodoList
-              .slice()
-              .sort((todo1, todo2) => {
-                if (todo1.isDone && !todo2.isDone) {
-                  return 1
-                }
-                if (!todo1.isDone && todo2.isDone) {
-                  return -1
-                }
-                return todo1.id - todo2.id
-              })
-              .map((todo) => {
-                return (
-                  <div key={todo.id}>
-                    <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} onTodoCheck={onCheck} />
-                  </div>
-                )
-              })
-          : todoData &&
-            todoData
-              .slice()
-              .sort((todo1, todo2) => {
-                if (todo1.isDone && !todo2.isDone) {
-                  return 1
-                }
-                if (!todo1.isDone && todo2.isDone) {
-                  return -1
-                }
-                return todo1.id - todo2.id
-              })
-              .map((todo) => {
-                return (
-                  <div key={todo.id}>
-                    <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} onTodoCheck={onCheck} />
-                  </div>
-                )
-              })}
+        {pendingTodos.length > 0 && (
+          <>
+            {pendingTodos.map((todo) => (
+              <div key={todo.id}>
+                <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} onTodoCheck={onCheck} />
+              </div>
+            ))}
+          </>
+        )}
+
+        {completedTodos.length > 0 && (
+          <>
+            <hr className={classes.horizontalLine} />
+            <h3 className={classes.titleHistory}>History</h3>
+            {completedTodos.map((todo) => (
+              <div key={todo.id}>
+                <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} onTodoCheck={onCheck} />
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </div>
   )
