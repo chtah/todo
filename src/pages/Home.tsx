@@ -7,6 +7,7 @@ import useTodoCreate from '../hooks/useTodoCreate'
 import useTodoGet from '../hooks/useTodoGet'
 import TodoCard from '../components/todoCard'
 import { ITodoDTO } from '../dto/dto'
+import dayjs from 'dayjs'
 
 const Home = () => {
   const [newTodo, setTodo] = useState<string>('')
@@ -39,7 +40,10 @@ const Home = () => {
         console.error('Submit data error', error)
       }
     } else {
-      console.error('Please select date.')
+      //handle dont input date and time
+      await Submit({ todo_list: newTodo, date: new Date(dayjs().utc().startOf('day').toISOString()) })
+      const newData = await fetchData()
+      newData && newData ? setTodoList(newData) : null
     }
   }
 
