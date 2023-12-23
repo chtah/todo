@@ -1,12 +1,12 @@
 .card {
   display: flex;
   width: 500px;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 20px;
 
   color: black;
-  padding: 20px;
+  padding: 10px 20px;
   background-color: white;
   border-radius: 15px;
   box-shadow: 0 0 10px 5px rgb(0 0 0 / 0.05);
@@ -16,4 +16,30 @@
   /* text-decoration: line-through; */
   background-color: rgba(255, 255, 255, 0.01);
   color: rgb(0 0 0 / 0.3);
+}
+
+.left {
+  display: flex;
+  gap: 20px;
+}
+
+.right {
+  display: flex;
+  gap: 10px;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dateAndTimeContainer {
+  display: flex;
+  gap: 20px;
+
+  font-size: 12px;
+  color: #757575;
 }

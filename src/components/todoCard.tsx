@@ -76,12 +76,31 @@ const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited, onTodoCheck }: ITodoP
 
   return (
     <div className={`${classes.card} ${todoPost.isDone ? classes.todoDone : null}`}>
-      <Checkbox onChange={onCheckedChange} checked={todoPost.isDone} />
-      <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{todoPost.todo_list}</p>
-      <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{showDate}</p>
-      <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{showTime}</p>
-      <Button icon={<EditOutlined />} onClick={showModal} disabled={todoPost.isDone} />
-      <Button icon={<DeleteOutlined />} onClick={() => deleteButton(todoPost.id)} />
+      <div className={classes.left}>
+        <Checkbox onChange={onCheckedChange} checked={todoPost.isDone} />
+        <div className={classes.textContainer}>
+          <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{todoPost.todo_list}</p>
+          <div className={classes.dateAndTimeContainer}>
+            <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{showDate}</p>
+            <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{showTime}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className={classes.right}>
+        <Button
+          style={{ border: 'none', boxShadow: 'none' }}
+          icon={<EditOutlined />}
+          onClick={showModal}
+          disabled={todoPost.isDone}
+        />
+        <Button
+          style={{ border: 'none', boxShadow: 'none' }}
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => deleteButton(todoPost.id)}
+        />
+      </div>
 
       <Modal title="Edit" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <Input

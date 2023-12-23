@@ -8,6 +8,7 @@ import useTodoGet from '../hooks/useTodoGet'
 import TodoCard from '../components/todoCard'
 import { ITodoDTO } from '../dto/dto'
 import dayjs from 'dayjs'
+import toast, { Toaster } from 'react-hot-toast'
 
 const Home = () => {
   const [newTodo, setTodo] = useState<string>('')
@@ -29,6 +30,8 @@ const Home = () => {
 
   const SubmitTodo = async () => {
     if (newDate) {
+      if (newTodo === '') return console.log('Need Todo')
+
       try {
         const combinedDateTime = new Date(
           `${newDate.format('YYYY-MM-DD')}T${(newTime && newTime.format('HH:mm:ss')) || '00:00:00'}.000Z`,
@@ -36,6 +39,10 @@ const Home = () => {
         await Submit({ todo_list: newTodo, date: combinedDateTime })
         const newData = await fetchData()
         newData && newData ? setTodoList(newData) : null
+
+        setTodo('')
+        setDate(null)
+        setTime(null)
       } catch (error) {
         console.error('Submit data error', error)
       }
@@ -44,6 +51,10 @@ const Home = () => {
       await Submit({ todo_list: newTodo, date: new Date(dayjs().utc().startOf('day').toISOString()) })
       const newData = await fetchData()
       newData && newData ? setTodoList(newData) : null
+
+      setTodo('')
+      setDate(null)
+      setTime(null)
     }
   }
 
@@ -58,11 +69,24 @@ const Home = () => {
   }
 
   const onEdit = async () => {
+    const notifySubmit = () => {
+      toast.success('Edited', { position: 'top-center', duration: 1500 })
+    }
+
+    const notifyError = () => {
+      toast.success('Cannot Edit', { position: 'top-center', duration: 1500 })
+    }
     try {
       await fetchData()
       const newData = await fetchData()
       newData && newData ? setTodoList(newData) : null
+      setTimeout(() => {
+        notifySubmit()
+      }, 500)
     } catch (error) {
+      setTimeout(() => {
+        notifyError()
+      }, 500)
       console.error('Error delete data', error)
     }
   }
@@ -87,6 +111,7 @@ const Home = () => {
 
   return (
     <div>
+      <Toaster />
       <h1 className={classes.title}>TODO LIST</h1>
       <div className={classes.inputContainer}>
         <Space.Compact className={classes.inputTodo}>
@@ -95,9 +120,10 @@ const Home = () => {
               setTodo(e.target.value)
             }}
             placeholder="Todo"
+            value={newTodo}
           />
-          <DatePicker className={classes.inputDate} onChange={onDateChange} placeholder="Date" />
-          <TimePicker className={classes.inputTime} onChange={onTimeChange} format={'HH:mm'} />
+          <DatePicker className={classes.inputDate} onChange={onDateChange} placeholder="Date" value={newDate} />
+          <TimePicker className={classes.inputTime} onChange={onTimeChange} format={'HH:mm'} value={newTime} />
           <Button type="primary" onClick={SubmitTodo}>
             Submit
           </Button>

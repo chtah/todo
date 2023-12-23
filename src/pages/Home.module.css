@@ -33,6 +33,7 @@
 .horizontalLine {
   border: 1px solid rgba(0, 0, 0, 0.1);
   width: 600px;
+  margin: 15px 0 0 0;
 }
 
 .titleHistory {
