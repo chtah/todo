@@ -1,0 +1,23 @@
+.title {
+  color: #ffffff;
+  text-align: center;
+  margin: 20px 0 20px 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputTodo {
+  width: 500px;
+}
+
+.inputDate {
+  width: 200px;
+}
+
+.inputTime {
+  width: 300px;
+}
