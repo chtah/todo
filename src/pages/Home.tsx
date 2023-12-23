@@ -18,20 +18,23 @@ const Home = () => {
   const { todoData, fetchData } = useTodoGet()
   const [newTodoList, setTodoList] = useState<ITodoDTO[] | null>(todoData)
 
-  const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString)
+  const onDateChange: DatePickerProps['onChange'] = (date) => {
     date !== null ? setDate(date) : null
   }
 
-  const onTimeChange = (time: Dayjs | null, timeString: string) => {
-    console.log(time, timeString)
+  const onTimeChange = (time: Dayjs | null) => {
     time !== null ? setTime(time) : null
   }
 
   const SubmitTodo = async () => {
+    const notifyError = () => toast.error('Enter Todo', { position: 'top-center', duration: 1500 })
     if (newDate) {
-      if (newTodo === '') return console.log('Need Todo')
-
+      if (newTodo === '') {
+        return setTimeout(() => {
+          resetField()
+          notifyError()
+        }, 500)
+      }
       try {
         const combinedDateTime = new Date(
           `${newDate.format('YYYY-MM-DD')}T${(newTime && newTime.format('HH:mm:ss')) || '00:00:00'}.000Z`,
@@ -40,21 +43,23 @@ const Home = () => {
         const newData = await fetchData()
         newData && newData ? setTodoList(newData) : null
 
-        setTodo('')
-        setDate(null)
-        setTime(null)
+        resetField()
       } catch (error) {
         console.error('Submit data error', error)
       }
     } else {
+      if (newTodo === '' && newDate === null && newTime === null) {
+        return setTimeout(() => {
+          resetField()
+          notifyError()
+        }, 500)
+      }
       //handle dont input date and time
       await Submit({ todo_list: newTodo, date: new Date(dayjs().utc().startOf('day').toISOString()) })
       const newData = await fetchData()
       newData && newData ? setTodoList(newData) : null
 
-      setTodo('')
-      setDate(null)
-      setTime(null)
+      resetField()
     }
   }
 
@@ -101,12 +106,18 @@ const Home = () => {
     }
   }
 
-  const completedTodos = (
-    newTodoList ? newTodoList.filter((todo) => todo.isDone) : todoData ? todoData.filter((todo) => todo.isDone) : []
+  const resetField = () => {
+    setTodo('')
+    setDate(null)
+    setTime(null)
+  }
+
+  const pendingTodo = (
+    newTodoList ? newTodoList.filter((todo) => !todo.isDone) : todoData ? todoData.filter((todo) => !todo.isDone) : []
   ).sort((todo1, todo2) => todo1.id - todo2.id)
 
-  const pendingTodos = (
-    newTodoList ? newTodoList.filter((todo) => !todo.isDone) : todoData ? todoData.filter((todo) => !todo.isDone) : []
+  const completedTodo = (
+    newTodoList ? newTodoList.filter((todo) => todo.isDone) : todoData ? todoData.filter((todo) => todo.isDone) : []
   ).sort((todo1, todo2) => todo1.id - todo2.id)
 
   return (
@@ -119,7 +130,7 @@ const Home = () => {
             onChange={(e) => {
               setTodo(e.target.value)
             }}
-            placeholder="Todo"
+            placeholder="Enter Todo"
             value={newTodo}
           />
           <DatePicker className={classes.inputDate} onChange={onDateChange} placeholder="Date" value={newDate} />
@@ -131,9 +142,9 @@ const Home = () => {
       </div>
 
       <div className={classes.cardContainer}>
-        {pendingTodos.length > 0 && (
+        {pendingTodo.length > 0 && (
           <>
-            {pendingTodos.map((todo) => (
+            {pendingTodo.map((todo) => (
               <div key={todo.id}>
                 <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} onTodoCheck={onCheck} />
               </div>
@@ -141,11 +152,11 @@ const Home = () => {
           </>
         )}
 
-        {completedTodos.length > 0 && (
+        {completedTodo.length > 0 && (
           <>
             <hr className={classes.horizontalLine} />
-            <h3 className={classes.titleHistory}>History</h3>
-            {completedTodos.map((todo) => (
+            <h3 className={classes.titleHistory}>Done</h3>
+            {completedTodo.map((todo) => (
               <div key={todo.id}>
                 <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} onTodoCheck={onCheck} />
               </div>

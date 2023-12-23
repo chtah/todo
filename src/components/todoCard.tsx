@@ -27,13 +27,11 @@ const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited, onTodoCheck }: ITodoP
   const [newDate, setDate] = useState<Dayjs>(dayjs(todoPost.date).utc())
   const [newTime, setTime] = useState<Dayjs>(dayjs(todoPost.date).utc())
 
-  const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString)
+  const onDateChange: DatePickerProps['onChange'] = (date) => {
     date !== null ? setDate(date) : null
   }
 
-  const onTimeChange = (time: Dayjs | null, timeString: string) => {
-    console.log(time, timeString)
+  const onTimeChange = (time: Dayjs | null) => {
     time !== null ? setTime(time) : null
   }
 
@@ -103,15 +101,25 @@ const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited, onTodoCheck }: ITodoP
       </div>
 
       <Modal title="Edit" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <Input
-          onChange={(e) => {
-            setTodo(e.target.value)
-          }}
-          defaultValue={newTodo}
-          placeholder="Todo"
-        />
-        <DatePicker className={classes.inputDate} defaultValue={newDate} onChange={onDateChange} placeholder="Date" />
-        <TimePicker className={classes.inputTime} defaultValue={newTime} onChange={onTimeChange} format={'HH:mm'} />
+        <div className={classes.modalContainer}>
+          <Input
+            className={classes.inputTodo}
+            onChange={(e) => {
+              setTodo(e.target.value)
+            }}
+            defaultValue={newTodo}
+            placeholder="Todo"
+          />
+          <div className={classes.dateAndTime}>
+            <DatePicker
+              className={classes.inputDate}
+              defaultValue={newDate}
+              onChange={onDateChange}
+              placeholder="Date"
+            />
+            <TimePicker className={classes.inputTime} defaultValue={newTime} onChange={onTimeChange} format={'HH:mm'} />
+          </div>
+        </div>
       </Modal>
     </div>
   )

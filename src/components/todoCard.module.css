@@ -27,7 +27,6 @@
   display: flex;
   gap: 10px;
   box-shadow: none;
-  text-decoration: none;
 }
 
 .textContainer {
@@ -42,4 +41,29 @@
 
   font-size: 12px;
   color: #757575;
+}
+
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.inputTodo {
+  width: 400px;
+}
+
+.dateAndTime {
+  display: flex;
+  gap: 10px;
+}
+
+.inputDate {
+  width: 195px;
+}
+
+.inputTime {
+  width: 195px;
 }
