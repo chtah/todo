@@ -3,7 +3,7 @@ import { ITodoDTO } from '../dto/dto'
 import useTodoDelete from '../hooks/useTodoDelete'
 import useTodoEdit from '../hooks/useTodoEdit'
 import classes from './todoCard.module.css'
-import { Button, DatePicker, DatePickerProps, Input, Modal, TimePicker } from 'antd'
+import { Checkbox, Button, DatePicker, DatePickerProps, Input, Modal, TimePicker } from 'antd'
 import dayjs, { Dayjs } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
@@ -13,9 +13,10 @@ interface ITodoProps {
   todoPost: ITodoDTO
   onTodoDeleted: () => void
   onTodoEdited: () => void
+  onTodoCheck: () => void
 }
 
-const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited }: ITodoProps) => {
+const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited, onTodoCheck }: ITodoProps) => {
   const showDate = dayjs(todoPost.date).utc().format('YYYY-MM-DD')
   const showTime = dayjs(todoPost.date).utc().format('HH:mm')
   const { SubmitDelete } = useTodoDelete()
@@ -66,11 +67,18 @@ const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited }: ITodoProps) => {
     }
   }
 
+  const onCheckedChange = async () => {
+    const updatedTodo = { id: todoPost.id, isDone: !todoPost.isDone }
+    await SubmitEdit(updatedTodo)
+    onTodoCheck()
+  }
+
   return (
     <div className={classes.card}>
-      <p>{todoPost.todo_list}</p>
-      <p>{showDate}</p>
-      <p>{showTime}</p>
+      <p className={todoPost.isDone ? `${classes.todoDone}` : `${classes.todoNotDone}`}>{todoPost.todo_list}</p>
+      <p className={todoPost.isDone ? `${classes.todoDone}` : `${classes.todoNotDone}`}>{showDate}</p>
+      <p className={todoPost.isDone ? `${classes.todoDone}` : `${classes.todoNotDone}`}>{showTime}</p>
+      <Checkbox onChange={onCheckedChange} checked={todoPost.isDone} />
       <Button onClick={() => deleteButton(todoPost.id)}>Delete</Button>
       <Button onClick={showModal}>Edit</Button>
       <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>

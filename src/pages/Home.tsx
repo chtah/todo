@@ -67,6 +67,16 @@ const Home = () => {
     }
   }
 
+  const onCheck = async () => {
+    try {
+      await fetchData()
+      const newData = await fetchData()
+      newData && newData ? setTodoList(newData) : null
+    } catch (error) {
+      console.error('Error delete data', error)
+    }
+  }
+
   return (
     <div>
       <h1 className={classes.title}>TODO LIST</h1>
@@ -87,21 +97,27 @@ const Home = () => {
       </div>
       <div className={classes.card}>
         {newTodoList !== null
-          ? newTodoList.map((todo) => {
-              return (
-                <div key={todo.id}>
-                  <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} />
-                </div>
-              )
-            })
+          ? newTodoList
+              .slice()
+              .sort((todo1, todo2) => todo1.id - todo2.id)
+              .map((todo) => {
+                return (
+                  <div key={todo.id}>
+                    <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} onTodoCheck={onCheck} />
+                  </div>
+                )
+              })
           : todoData &&
-            todoData.map((todo) => {
-              return (
-                <div key={todo.id}>
-                  <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} />
-                </div>
-              )
-            })}
+            todoData
+              .slice()
+              .sort((todo1, todo2) => todo1.id - todo2.id)
+              .map((todo) => {
+                return (
+                  <div key={todo.id}>
+                    <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} onTodoCheck={onCheck} />
+                  </div>
+                )
+              })}
       </div>
     </div>
   )
