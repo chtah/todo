@@ -51,6 +51,16 @@ const Home = () => {
     }
   }
 
+  const onEdit = async () => {
+    try {
+      await fetchData()
+      const newData = await fetchData()
+      newData && newData ? setTodoList(newData) : null
+    } catch (error) {
+      console.error('Error delete data', error)
+    }
+  }
+
   return (
     <div>
       <h1 className={classes.title}>TODO LIST</h1>
@@ -74,7 +84,7 @@ const Home = () => {
           ? newTodoList.map((todo) => {
               return (
                 <div key={todo.id}>
-                  <TodoCard todoPost={todo} onTodoDeleted={onDelete} />
+                  <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} />
                 </div>
               )
             })
@@ -82,7 +92,7 @@ const Home = () => {
             todoData.map((todo) => {
               return (
                 <div key={todo.id}>
-                  <TodoCard todoPost={todo} onTodoDeleted={onDelete} />
+                  <TodoCard todoPost={todo} onTodoDeleted={onDelete} onTodoEdited={onEdit} />
                 </div>
               )
             })}

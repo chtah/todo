@@ -9,9 +9,10 @@ import dayjs, { Dayjs } from 'dayjs'
 interface ITodoProps {
   todoPost: ITodoDTO
   onTodoDeleted: () => void
+  onTodoEdited: () => void
 }
 
-const TodoCard = ({ todoPost, onTodoDeleted }: ITodoProps) => {
+const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited }: ITodoProps) => {
   const showDate = new Date(todoPost.date).toISOString()
   const showTime = new Date(todoPost.date).toISOString()
   const { SubmitDelete } = useTodoDelete()
@@ -40,6 +41,7 @@ const TodoCard = ({ todoPost, onTodoDeleted }: ITodoProps) => {
       const combinedDateTime = new Date(`${newDate.format('YYYY-MM-DD')}T${newTime.format('HH:mm:ss') || '00:00:00'}Z`)
       const updatedTodo = { id: todoPost.id, todo_list: newTodo, date: combinedDateTime }
       await SubmitEdit(updatedTodo)
+      onTodoEdited()
     } catch (error) {
       console.error('Error editing data', error)
     }
