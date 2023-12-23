@@ -1,8 +1,19 @@
 .card {
-  color: white;
+  display: flex;
+  width: 500px;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  color: black;
   padding: 20px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 0 10px 5px rgb(0 0 0 / 0.05);
 }
 
 .todoDone {
-  text-decoration: line-through;
+  /* text-decoration: line-through; */
+  background-color: rgba(255, 255, 255, 0.01);
+  color: rgb(0 0 0 / 0.3);
 }

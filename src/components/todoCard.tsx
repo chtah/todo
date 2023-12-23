@@ -6,6 +6,7 @@ import classes from './todoCard.module.css'
 import { Checkbox, Button, DatePicker, DatePickerProps, Input, Modal, TimePicker } from 'antd'
 import dayjs, { Dayjs } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
 dayjs.extend(utc)
 
@@ -74,14 +75,15 @@ const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited, onTodoCheck }: ITodoP
   }
 
   return (
-    <div className={classes.card}>
-      <p className={todoPost.isDone ? `${classes.todoDone}` : `${classes.todoNotDone}`}>{todoPost.todo_list}</p>
-      <p className={todoPost.isDone ? `${classes.todoDone}` : `${classes.todoNotDone}`}>{showDate}</p>
-      <p className={todoPost.isDone ? `${classes.todoDone}` : `${classes.todoNotDone}`}>{showTime}</p>
+    <div className={`${classes.card} ${todoPost.isDone ? classes.todoDone : null}`}>
       <Checkbox onChange={onCheckedChange} checked={todoPost.isDone} />
-      <Button onClick={() => deleteButton(todoPost.id)}>Delete</Button>
-      <Button onClick={showModal}>Edit</Button>
-      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{todoPost.todo_list}</p>
+      <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{showDate}</p>
+      <p className={`${todoPost.isDone ? classes.todoDone : null}`}>{showTime}</p>
+      <Button icon={<EditOutlined />} onClick={showModal} disabled={todoPost.isDone} />
+      <Button icon={<DeleteOutlined />} onClick={() => deleteButton(todoPost.id)} />
+
+      <Modal title="Edit" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <Input
           onChange={(e) => {
             setTodo(e.target.value)

@@ -12,6 +12,7 @@
     "start": "tsc && vite build && vite"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "antd": "^5.12.5",
     "axios": "^1.6.2",
     "dayjs": "^1.11.10",

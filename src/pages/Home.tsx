@@ -80,7 +80,7 @@ const Home = () => {
   return (
     <div>
       <h1 className={classes.title}>TODO LIST</h1>
-      <div className={classes.container}>
+      <div className={classes.inputContainer}>
         <Space.Compact className={classes.inputTodo}>
           <Input
             onChange={(e) => {
@@ -95,11 +95,19 @@ const Home = () => {
           </Button>
         </Space.Compact>
       </div>
-      <div className={classes.card}>
+      <div className={classes.cardContainer}>
         {newTodoList !== null
           ? newTodoList
               .slice()
-              .sort((todo1, todo2) => todo1.id - todo2.id)
+              .sort((todo1, todo2) => {
+                if (todo1.isDone && !todo2.isDone) {
+                  return 1
+                }
+                if (!todo1.isDone && todo2.isDone) {
+                  return -1
+                }
+                return todo1.id - todo2.id
+              })
               .map((todo) => {
                 return (
                   <div key={todo.id}>
@@ -110,7 +118,15 @@ const Home = () => {
           : todoData &&
             todoData
               .slice()
-              .sort((todo1, todo2) => todo1.id - todo2.id)
+              .sort((todo1, todo2) => {
+                if (todo1.isDone && !todo2.isDone) {
+                  return 1
+                }
+                if (!todo1.isDone && todo2.isDone) {
+                  return -1
+                }
+                return todo1.id - todo2.id
+              })
               .map((todo) => {
                 return (
                   <div key={todo.id}>
