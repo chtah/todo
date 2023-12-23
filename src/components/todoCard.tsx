@@ -5,6 +5,9 @@ import useTodoEdit from '../hooks/useTodoEdit'
 import classes from './todoCard.module.css'
 import { Button, DatePicker, DatePickerProps, Input, Modal, TimePicker } from 'antd'
 import dayjs, { Dayjs } from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
 
 interface ITodoProps {
   todoPost: ITodoDTO
@@ -13,14 +16,14 @@ interface ITodoProps {
 }
 
 const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited }: ITodoProps) => {
-  const showDate = new Date(todoPost.date).toISOString()
-  const showTime = new Date(todoPost.date).toISOString()
+  const showDate = dayjs(todoPost.date).utc().format('YYYY-MM-DD')
+  const showTime = dayjs(todoPost.date).utc().format('HH:mm')
   const { SubmitDelete } = useTodoDelete()
   const { SubmitEdit } = useTodoEdit()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [newTodo, setTodo] = useState<string>(todoPost.todo_list)
-  const [newDate, setDate] = useState<Dayjs>(dayjs(todoPost.date))
-  const [newTime, setTime] = useState<Dayjs>(dayjs(todoPost.date))
+  const [newDate, setDate] = useState<Dayjs>(dayjs(todoPost.date).utc())
+  const [newTime, setTime] = useState<Dayjs>(dayjs(todoPost.date).utc())
 
   const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString)
@@ -38,7 +41,9 @@ const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited }: ITodoProps) => {
 
   const handleOk = async () => {
     try {
-      const combinedDateTime = new Date(`${newDate.format('YYYY-MM-DD')}T${newTime.format('HH:mm:ss') || '00:00:00'}Z`)
+      const combinedDateTime = new Date(
+        `${newDate.format('YYYY-MM-DD')}T${newTime.format('HH:mm:ss') || '00:00:00'}.000Z`,
+      )
       const updatedTodo = { id: todoPost.id, todo_list: newTodo, date: combinedDateTime }
       await SubmitEdit(updatedTodo)
       onTodoEdited()
@@ -77,7 +82,7 @@ const TodoCard = ({ todoPost, onTodoDeleted, onTodoEdited }: ITodoProps) => {
           placeholder="Todo"
         />
         <DatePicker className={classes.inputDate} defaultValue={newDate} onChange={onDateChange} placeholder="Date" />
-        <TimePicker className={classes.inputTime} defaultValue={newTime} onChange={onTimeChange} />
+        <TimePicker className={classes.inputTime} defaultValue={newTime} onChange={onTimeChange} format={'HH:mm'} />
       </Modal>
     </div>
   )
